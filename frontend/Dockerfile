@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:18-alpine
 
 # 作業ディレクトリを設定
 WORKDIR /app
@@ -19,4 +19,4 @@ RUN npm run build
 EXPOSE 8080
 
 # アプリケーションを起動
-CMD ["npm", "run", "serve"]
+CMD ["npm", "run", "dev"]
