@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - /app/node_modules #コンテナの再起動や再作成時に node_modules の内容が失われないようにするための設定
+    command: npm run dev
