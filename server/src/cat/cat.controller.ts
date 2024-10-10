@@ -17,6 +17,11 @@ export class CatController {
         return this.catService.findAll();
     }
 
+    @Get('a')
+    catSayHi(): string {
+        return this.catService.catGreeting();
+    }
+
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Cat> {
         return this.catService.findOne(Number(id));

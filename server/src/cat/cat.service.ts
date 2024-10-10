@@ -30,6 +30,7 @@ export class CatService {
     findOne(id: number): Promise<Cat> {
         return this.catRepository.findOneBy({ id });
     }
+
     catGreeting(): string {
         return 'cat says hi';
     }
