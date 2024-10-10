@@ -17,7 +17,7 @@ export class CatController {
         return this.catService.findAll();
     }
 
-    @Get('a')
+    @Get('greeting')
     catSayHi(): string {
         return this.catService.catGreeting();
     }
