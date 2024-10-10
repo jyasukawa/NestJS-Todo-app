@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cat } from './cat.entity';
@@ -27,11 +27,22 @@ export class CatService {
     }
 
         // 指定IDの猫を取得
-    findOne(id: number): Promise<Cat> {
-        return this.catRepository.findOneBy({ id });
+    async findOne(id: number): Promise<Cat> {
+        const cat = await this.catRepository.findOneBy({ id });
+        if (!cat) {
+            throw new NotFoundException(`Cat with ID ${id} not found`);
+        }
+        return cat;
     }
 
     catGreeting(): string {
         return 'cat says hi';
+    }
+
+    async deleteCat(id: number): Promise<void> {
+        const result = await this.catRepository.delete(id);
+        if (result.affected === 0) {
+            throw new NotFoundException(`Cat with ID ${id} not found`);
+        }
     }
 }
