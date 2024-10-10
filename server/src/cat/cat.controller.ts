@@ -1,12 +1,24 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, Post } from '@nestjs/common';
 import { CatService } from './cat.service';
+import { Cat } from './cat.entity';
 
 @Controller('cat')
 export class CatController {
-  constructor(private readonly catService: CatService) {}
+    constructor(private readonly catService: CatService) {}
 
-  @Get()
-  function(): string {
-    return this.catService.catGreeting();
-  }
+    @Post('initialize')
+    async initializeCats(): Promise<string> {
+        await this.catService.initializeCats();
+        return 'Cat data initialized';
+    }
+
+    @Get()
+    async findAll(): Promise<Cat[]> {
+        return this.catService.findAll();
+    }
+
+    @Get(':id')
+    async findOne(@Param('id') id: string): Promise<Cat> {
+        return this.catService.findOne(Number(id));
+    }
 }
