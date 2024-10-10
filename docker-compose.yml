@@ -1,0 +1,54 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "8080:8080"
+    depends_on:
+      - server
+    networks:
+      - app-network
+
+  server:
+    build:
+      context: ./server
+    volumes:
+        - ./server:/app
+        - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_HOST=db
+      - DATABASE_PORT=3306
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=root
+      - DATABASE_NAME=nest_db
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nest_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
