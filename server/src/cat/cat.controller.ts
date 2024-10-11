@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Param, Post, Delete, ParseIntPipe, Body } from '@nestjs/common';
 import { CatService } from './cat.service';
 import { Cat } from './cat.entity';
 
@@ -25,6 +25,11 @@ export class CatController {
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Cat> {
         return this.catService.findOne(Number(id));
+    }
+
+    @Post()
+    async createCatFunc(@Body() cat: Cat): Promise<Cat> {
+        return this.catService.createCat(cat);
     }
 
     @Delete(':id')

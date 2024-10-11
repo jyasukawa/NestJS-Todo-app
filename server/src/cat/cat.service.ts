@@ -39,6 +39,11 @@ export class CatService {
         return 'cat says hi';
     }
 
+    async createCat(cat: Cat): Promise<Cat> {
+        const newCat = this.catRepository.create(cat); // 新しい猫のエンティティを作成
+        return this.catRepository.save(newCat); // データベースに保存
+    }
+
     async deleteCat(id: number): Promise<void> {
         const result = await this.catRepository.findOneBy({ id });
         if (!result) {
