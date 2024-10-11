@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Post, Delete } from '@nestjs/common';
 import { CatService } from './cat.service';
 import { Cat } from './cat.entity';
 
@@ -25,5 +25,11 @@ export class CatController {
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Cat> {
         return this.catService.findOne(Number(id));
+    }
+
+    @Delete(':id')
+    async deleteCat(@Param('id') id: string): Promise<string> {
+        await this.catService.deleteCat(Number(id));
+        return `Cat with ID ${id} has been deleted`;
     }
 }
