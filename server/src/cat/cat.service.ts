@@ -2,7 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cat } from './cat.entity';
-import { CreateCatDto } from './cat.dto';
+import { CreateCatDto } from './dto/createCat.dto';
+import { UpdateCatDto } from './dto/updateCat.dto';
 
 @Injectable()
 export class CatService {
@@ -45,7 +46,7 @@ export class CatService {
         return this.catRepository.save(newCat); // データベースに保存
     }
 
-    async updateCat(id: number, updatedCat: Partial<Cat>): Promise<Cat> {
+    async updateCat(id: number, updatedCat: UpdateCatDto): Promise<Cat> {
         const existingCat = await this.findOne(id);
         if (!existingCat) {
             throw new NotFoundException(`Cat with ID ${id} not found`);
