@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cat } from './cat.entity';
+import { CreateCatDto } from './create-cat.dto';
 
 @Injectable()
 export class CatService {
@@ -39,7 +40,7 @@ export class CatService {
         return 'cat says hi';
     }
 
-    async createCat(cat: Cat): Promise<Cat> {
+    async createCat(cat: CreateCatDto): Promise<Cat> {
         const newCat = this.catRepository.create(cat); // 新しい猫のエンティティを作成
         return this.catRepository.save(newCat); // データベースに保存
     }
