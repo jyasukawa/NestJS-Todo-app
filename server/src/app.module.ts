@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CatModule } from './cat/cat.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TaskController } from './task/task.controller';
-import { TaskService } from './task/task.service';
+import { CatModule } from './cat/cat.module';
 import { TaskModule } from './task/task.module';
 
 @Module({
@@ -22,7 +20,7 @@ import { TaskModule } from './task/task.module';
     CatModule,
     TaskModule,
   ],
-  controllers: [AppController, TaskController, TaskController],
-  providers: [AppService, TaskService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
