@@ -11,6 +11,6 @@ export class Cat {
   @Column()
   age: number;
 
-  @Column()
-  breed: string;
+//   @Column()
+//   breed: string;
 }

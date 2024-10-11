@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cat } from './cat.entity';
+import { CreateCatDto } from './dto/createCat.dto';
+import { UpdateCatDto } from './dto/updateCat.dto';
 
 @Injectable()
 export class CatService {
@@ -13,9 +15,9 @@ export class CatService {
         // 初期データをデータベースに挿入
     async initializeCats() {
             const cats = [
-            { name: 'Cat 1', age: 2, breed: 'Persian' },
-            { name: 'Cat 2', age: 3, breed: 'Siamese' },
-            { name: 'Cat 3', age: 1, breed: 'Maine Coon' },
+            { name: 'Cat 1', age: 2 },
+            { name: 'Cat 2', age: 3 },
+            { name: 'Cat 3', age: 1 },
         ];
 
         await this.catRepository.save(cats);
@@ -39,10 +41,25 @@ export class CatService {
         return 'cat says hi';
     }
 
-    async deleteCat(id: number): Promise<void> {
-        const result = await this.catRepository.delete(id);
-        if (result.affected === 0) {
+    async createCat(cat: CreateCatDto): Promise<Cat> {
+        const newCat = this.catRepository.create(cat); // 新しい猫のエンティティを作成
+        return this.catRepository.save(newCat); // データベースに保存
+    }
+
+    async updateCat(id: number, updatedCat: UpdateCatDto): Promise<Cat> {
+        const existingCat = await this.findOne(id);
+        if (!existingCat) {
             throw new NotFoundException(`Cat with ID ${id} not found`);
         }
+        const updatedEntity = Object.assign(existingCat, updatedCat); // エンティティを更新し、データベースに保存
+        return this.catRepository.save(updatedEntity);
+    }
+
+    async deleteCat(id: number): Promise<void> {
+        const result = await this.catRepository.findOneBy({ id });
+        if (!result) {
+            throw new NotFoundException(`Cat with ID ${id} not found`);
+        }
+        await this.catRepository.delete(id);
     }
 }
