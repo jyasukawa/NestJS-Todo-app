@@ -40,9 +40,10 @@ export class CatService {
     }
 
     async deleteCat(id: number): Promise<void> {
-        const result = await this.catRepository.delete(id);
-        if (result.affected === 0) {
+        const result = await this.catRepository.findOneBy({ id });
+        if (!result) {
             throw new NotFoundException(`Cat with ID ${id} not found`);
         }
+        await this.catRepository.delete(id);
     }
 }
