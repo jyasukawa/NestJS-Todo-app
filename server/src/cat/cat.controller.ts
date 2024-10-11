@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Post, Delete, ParseIntPipe } from '@nestjs/common';
 import { CatService } from './cat.service';
 import { Cat } from './cat.entity';
 
@@ -28,8 +28,10 @@ export class CatController {
     }
 
     @Delete(':id')
-    async deleteCat(@Param('id') id: string): Promise<string> {
-        await this.catService.deleteCat(Number(id));
+    async deleteCat(@Param('id', ParseIntPipe) id: number): Promise<string> {
+        await this.catService.deleteCat(id);
         return `Cat with ID ${id} has been deleted`;
     }
 }
+//ParseIntPipeを使用しない->uriに文字列が入った場合にサーバー側が処理できず500エラーになる
+//ParseIntPipeを使用すると"Bad Request","statusCode":400となる
