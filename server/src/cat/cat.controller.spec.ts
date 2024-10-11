@@ -47,8 +47,8 @@ describe('CatController', () => {
 
   it('should return all cats', async () => {
     const cats: Cat[] = [
-      { id: 1, name: 'Cat 1', age: 2, breed: 'Persian' },
-      { id: 2, name: 'Cat 2', age: 3, breed: 'Siamese' },
+      { id: 1, name: 'Cat 1', age: 2 },
+      { id: 2, name: 'Cat 2', age: 3 },
     ];
 
     mockCatService.findAll.mockResolvedValueOnce(cats);
@@ -69,7 +69,7 @@ describe('CatController', () => {
   });
 
   it('should return a single cat by ID', async () => {
-    const cat: Cat = { id: 1, name: 'Cat 1', age: 2, breed: 'Persian' };
+    const cat: Cat = { id: 1, name: 'Cat 1', age: 2 };
     mockCatService.findOne.mockResolvedValueOnce(cat);
 
     const result = await controller.findOne('1');
@@ -82,7 +82,7 @@ describe('CatController', () => {
   it('should delete a cat by ID', async () => {
     mockCatService.deleteCat.mockResolvedValueOnce(undefined);
 
-    const result = await controller.deleteCat('1');
+    const result = await controller.deleteCat(1);
 
     expect(result).toBe('Cat with ID 1 has been deleted');
     expect(mockCatService.deleteCat).toHaveBeenCalledWith(1);
