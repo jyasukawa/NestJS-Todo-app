@@ -13,9 +13,9 @@ export class CatService {
         // 初期データをデータベースに挿入
     async initializeCats() {
             const cats = [
-            { name: 'Cat 1', age: 2, breed: 'Persian' },
-            { name: 'Cat 2', age: 3, breed: 'Siamese' },
-            { name: 'Cat 3', age: 1, breed: 'Maine Coon' },
+            { name: 'Cat 1', age: 2 },
+            { name: 'Cat 2', age: 3 },
+            { name: 'Cat 3', age: 1 },
         ];
 
         await this.catRepository.save(cats);
