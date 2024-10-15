@@ -7,7 +7,6 @@ import { useTaskManager } from './composables/useTaskManager';
 const {
   tasks,
   editingIndex,
-  loadTasks,
   addNewTask,
   deleteTask,
   saveTask,

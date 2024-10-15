@@ -69,7 +69,6 @@ export function useTaskManager() {
     return {
         tasks,
         editingIndex,
-        loadTasks,
         addNewTask,
         deleteTask,
         saveTask,
