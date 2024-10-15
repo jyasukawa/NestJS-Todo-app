@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CatModule } from './cat/cat.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CatModule } from './cat/cat.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: true,
     }),
     CatModule,
+    TaskModule,
   ],
   controllers: [AppController],
   providers: [AppService],
