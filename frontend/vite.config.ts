@@ -8,4 +8,7 @@ export default defineConfig({
     host: true, // または host: '0.0.0.0'　これにより外部アクセスを許可
     port: 8080, // コンテナ内でのポート番号
     },
+  optimizeDeps: {
+    include: ['axios'],
+  },
 })

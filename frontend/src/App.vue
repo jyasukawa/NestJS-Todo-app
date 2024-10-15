@@ -3,40 +3,58 @@ import { ref, onMounted } from 'vue';
 import TitleComponent from './components/TitleComponent.vue';
 import TaskInputComponent from './components/TaskInputComponent.vue';
 import TaskItemComponent from './components/TaskItemComponent.vue';
+import axios from 'axios';
 
-const tasks = ref<string[]>([]);
+interface Task {
+  id: number;
+  task: string;
+}
+
+const tasks = ref<Task[]>([]);
 const editingIndex = ref<number | null>(null);
 
-const loadTasks = () => {
-  const savedTasks = localStorage.getItem('tasks');
-  if (savedTasks) {
-    tasks.value = JSON.parse(savedTasks);
+const loadTasks = async () => {
+  try {
+    const response = await axios.get<Task[]>('http://localhost:3000/task');
+    tasks.value = response.data;
+  } catch (error) {
+    console.error('タスクの取得に失敗しました:', error);
   }
 };
 
-const saveTasks = () => {
-  localStorage.setItem('tasks', JSON.stringify(tasks.value));
+const addNewTask = async (task: string) => {
+  try {
+    const response = await axios.post<Task>('http://localhost:3000/task', { task });
+    tasks.value.push(response.data); // 新しいタスクをリストに追加
+  } catch (error) {
+    console.error('タスクの追加に失敗しました:', error);
+  }
 };
 
-const addNewTask = (task: string) => {
-  tasks.value.push(task);
-  saveTasks();
+const deleteTask = async (index: number) => {
+  try {
+    const taskToDelete = tasks.value[index];
+    await axios.delete(`http://localhost:3000/task/${taskToDelete.id}`); // タスクIDで削除
+    tasks.value.splice(index, 1); // UI上でもタスクを削除
+    if (editingIndex.value !== null && editingIndex.value > index) {
+      editingIndex.value--;
+    } else if (editingIndex.value === index) {
+      editingIndex.value = null;
+    }
+  } catch (error) {
+    console.error('タスクの削除に失敗しました:', error);
+  }
 };
 
-const deleteTask = (index: number) => {
-  tasks.value.splice(index, 1);
-  if (editingIndex.value !== null && editingIndex.value > index) {
-    editingIndex.value--;
-  } else if (editingIndex.value === index) {
+const saveTask = async (index: number, task: string) => {
+  try {
+    const taskToUpdate = tasks.value[index];
+    await axios.patch(`http://localhost:3000/task/${taskToUpdate.id}`, { task });
+    tasks.value[index].task = task; // UI上でタスクを更新
     editingIndex.value = null;
+  } catch (error) {
+    console.error('タスクの更新に失敗しました:', error);
   }
-  saveTasks();
-};
-
-const saveTask = (index: number, task: string) => {
-  tasks.value[index] = task;
-  editingIndex.value = null;
-  saveTasks();
 };
 
 const startEditing = (index: number) => {
@@ -62,7 +80,7 @@ onMounted(() => {
       <TaskItemComponent
         v-for="(task, index) in tasks"
         :key="index"
-        :task="task"
+        :task="task.task"
         :index="index"
         :isEditing="editingIndex === index"
         @deleteTask="deleteTask"
