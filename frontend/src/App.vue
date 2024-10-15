@@ -15,7 +15,7 @@ const editingIndex = ref<number | null>(null);
 
 const loadTasks = async () => {
   try {
-    const response = await axios.get<Task[]>('http://localhost:3000/task');
+    const response = await axios.get<Task[]>('/task');
     tasks.value = response.data;
   } catch (error) {
     console.error('タスクの取得に失敗しました:', error);
@@ -24,7 +24,7 @@ const loadTasks = async () => {
 
 const addNewTask = async (task: string) => {
   try {
-    const response = await axios.post<Task>('http://localhost:3000/task', { task });
+    const response = await axios.post<Task>('/task', { task });
     tasks.value.push(response.data); // 新しいタスクをリストに追加
   } catch (error) {
     console.error('タスクの追加に失敗しました:', error);
@@ -34,7 +34,7 @@ const addNewTask = async (task: string) => {
 const deleteTask = async (index: number) => {
   try {
     const taskToDelete = tasks.value[index];
-    await axios.delete(`http://localhost:3000/task/${taskToDelete.id}`); // タスクIDで削除
+    await axios.delete(`/task/${taskToDelete.id}`); // タスクIDで削除
     tasks.value.splice(index, 1); // UI上でもタスクを削除
     if (editingIndex.value !== null && editingIndex.value > index) {
       editingIndex.value--;
@@ -49,7 +49,7 @@ const deleteTask = async (index: number) => {
 const saveTask = async (index: number, task: string) => {
   try {
     const taskToUpdate = tasks.value[index];
-    await axios.patch(`http://localhost:3000/task/${taskToUpdate.id}`, { task });
+    await axios.patch(`/task/${taskToUpdate.id}`, { task });
     tasks.value[index].task = task; // UI上でタスクを更新
     editingIndex.value = null;
   } catch (error) {
