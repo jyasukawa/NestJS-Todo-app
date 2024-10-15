@@ -1,55 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
 import TitleComponent from './components/TitleComponent.vue';
 import TaskInputComponent from './components/TaskInputComponent.vue';
 import TaskItemComponent from './components/TaskItemComponent.vue';
+import { useTaskManager } from './composables/useTaskManager';
 
-const tasks = ref<string[]>([]);
-const editingIndex = ref<number | null>(null);
-
-const loadTasks = () => {
-  const savedTasks = localStorage.getItem('tasks');
-  if (savedTasks) {
-    tasks.value = JSON.parse(savedTasks);
-  }
-};
-
-const saveTasks = () => {
-  localStorage.setItem('tasks', JSON.stringify(tasks.value));
-};
-
-const addNewTask = (task: string) => {
-  tasks.value.push(task);
-  saveTasks();
-};
-
-const deleteTask = (index: number) => {
-  tasks.value.splice(index, 1);
-  if (editingIndex.value !== null && editingIndex.value > index) {
-    editingIndex.value--;
-  } else if (editingIndex.value === index) {
-    editingIndex.value = null;
-  }
-  saveTasks();
-};
-
-const saveTask = (index: number, task: string) => {
-  tasks.value[index] = task;
-  editingIndex.value = null;
-  saveTasks();
-};
-
-const startEditing = (index: number) => {
-  editingIndex.value = index;
-};
-
-const cancelEditing = () => {
-  editingIndex.value = null;
-};
-
-onMounted(() => {
-  loadTasks();
-});
+const {
+  tasks,
+  editingIndex,
+  addNewTask,
+  deleteTask,
+  saveTask,
+  startEditing,
+  cancelEditing
+} = useTaskManager();
 </script>
 
 
@@ -60,9 +23,9 @@ onMounted(() => {
     <TaskInputComponent :addButtonPushed="addNewTask" @onNewTaskFocus="cancelEditing"/>
     <ul>
       <TaskItemComponent
-        v-for="(task, index) in tasks"
+        v-for="(taskData, index) in tasks"
         :key="index"
-        :task="task"
+        :task="taskData.task"
         :index="index"
         :isEditing="editingIndex === index"
         @deleteTask="deleteTask"
